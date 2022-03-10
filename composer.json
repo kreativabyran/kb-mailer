@@ -1,0 +1,17 @@
+{
+  "require": {
+    "pablo-sg-pacheco/wp-namespace-autoloader": "dev-master",
+    "stoutlogic/acf-builder": "^1.12",
+    "vlucas/phpdotenv": "^5.4"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.6",
+    "wp-coding-standards/wpcs": "^2.3"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "vendor\\squizlabs\\php_codesniffer\\bin\\phpcs.bat --config-set installed_paths ..\\..\\wp-coding-standards\\wpcs\\",
+      "vendor\\squizlabs\\php_codesniffer\\bin\\phpcs.bat --config-set default_standard WordPress-Extra"
+    ]
+  }
+}

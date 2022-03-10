@@ -1,0 +1,71 @@
+name: kb-mailer
+recipe: wordpress
+proxy:
+  pma:
+    - pma.kb-mailer.lndo.site
+  mailhog:
+    - mail.kb-mailer.lndo.site
+config:
+  webroot: wordpress
+  php: '8.1'
+  xdebug: true
+services:
+  pma:
+    type: phpmyadmin
+    host:
+      - database
+  mailhog:
+    type: mailhog
+    hogfrom:
+      - appserver
+#  database:
+#    portforward: 37001
+tooling:
+  composer:
+    service: appserver
+  build:
+    description: (re)installs wordpress and soft links theme dir to project root
+    cmd:
+      # (re)install Wordpress
+      - appserver: rm -rf wordpress && mkdir wordpress
+      - appserver: wp core download --path=wordpress
+      - appserver: wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=database --path=wordpress
+      - appserver: wp db reset --yes --path=wordpress
+      - appserver: wp core install --url=kb-mailer.lndo.site --title="kb-mailer DEV" --admin_user=oskar --admin_password=password --admin_email=do@kre.co --path=wordpress
+      - appserver: wp rewrite flush --hard --path=wordpress
+      # Symlink to the source theme files
+      - appserver: cd /app/wordpress/wp-content/plugins/ && ln -snf ../../../ kb-mailer
+      # Run composer
+      - appserver: composer install
+
+events:
+  pre-db-import:
+    - appserver: scp -i lando_id_rsa oskar@o.kreativabyran.se:/home/oskar/db_store/kb-mailer.sql.gz db.sql.gz
+  post-db-import:
+    # Search and replace URL
+    - appserver: wp search-replace "kb-mailer.d.kreativabyran.se" "kb-mailer.lndo.site" --all-tables --verbose --path=wordpress
+    # Replace https with http
+    - appserver: wp search-replace "https://kb-mailer.lndo.site" "http://kb-mailer.lndo.site" --all-tables --verbose --path=wordpress
+    # Update WP, themes, plugins, languages
+    - appserver: wp plugin update --all --path=wordpress && wp language plugin update --all --path=wordpress && wp theme update --all --path=wordpress && wp language theme update --all --path=wordpress && wp core update --force --path=wordpress && wp language core update --path=wordpress
+    # Hide site from search engines. Obviously makes no difference for local dev, but makes future uploads to public dev site safe.
+    - appserver: wp option set blog_public 0 --path=wordpress
+    # Enable WP Debug
+    - appserver: wp config set WP_DEBUG true --raw --path=wordpress
+    # Enable GraphQL Debug
+    - appserver: wp config set GRAPHQL_DEBUG true --raw --path=wordpress
+    # Change WP Mail SMTP plugin settings to use MailHog.
+    - appserver: wp option patch update wp_mail_smtp mail '{"from_email":"dev@kreativabyran.se","from_name":"LANDO DEV","mailer":"smtp","return_path":false,"from_email_force":true,"from_name_force":true}' --format=json --path=wordpress
+    - appserver: wp option patch update wp_mail_smtp smtp '{"autotls":"yes","auth":false,"host":"mailhog.kb-mailer.internal","encryption":"none","port":"1025","user":"dev@kb","pass":"pass"}' --format=json --path=wordpress
+    # Update Easy WP SMTP settings to use MailHog
+    - appserver: wp option patch update swpsmtp_options smtp_settings host mailhog.concert.internal --path=wordpress
+    - appserver: wp option patch update swpsmtp_options smtp_settings port 1025 --path=wordpress
+    - appserver: wp option patch update swpsmtp_options smtp_settings autentication no --path=wordpress
+    - appserver: wp option patch update swpsmtp_options smtp_settings type_encryption none --path=wordpress
+    # Remove temp DB files.
+    - appserver: rm -f db.sql.gz
+
+  pre-db-export:
+    - appserver: rm -f db.sql.gz
+  post-db-export:
+    - appserver: scp -i lando_id_rsa db.sql.gz oskar@o.kreativabyran.se:/home/oskar/db_store/kb-mailer.sql.gz
