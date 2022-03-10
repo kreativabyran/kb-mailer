@@ -30,9 +30,7 @@ tooling:
       - appserver: rm -rf wordpress && mkdir wordpress
       - appserver: wp core download --path=wordpress
       - appserver: wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=database --path=wordpress
-      - appserver: wp db reset --yes --path=wordpress
       - appserver: wp core install --url=kb-mailer.lndo.site --title="kb-mailer DEV" --admin_user=oskar --admin_password=password --admin_email=do@kre.co --path=wordpress
-      - appserver: wp rewrite flush --hard --path=wordpress
       # Symlink to the source theme files
       - appserver: cd /app/wordpress/wp-content/plugins/ && ln -snf ../../../ kb-mailer
       # Run composer

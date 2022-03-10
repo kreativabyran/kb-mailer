@@ -61,7 +61,7 @@ add_action( 'init', 'custom_post_type' );
 
 function kb_mailer_mail_metaboxes() {
 	global $wp_meta_boxes;
-	add_meta_box( 'postfunctiondiv', __( 'Function' ), 'kb_mailer_mail_metaboxes_html', 'kb_mailer_mail', 'normal', 'high' );
+	add_meta_box( 'kb-mailer-meta', __( 'Mail Body', 'kb-mailer' ), 'kb_mailer_mail_metaboxes_html', 'kb_mailer_mail', 'normal', 'high' );
 }
 add_action( 'add_meta_boxes_kbmails', 'kb_mailer_mail_metaboxes' );
 
