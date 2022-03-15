@@ -1,5 +1,4 @@
 <?php
-
 /*
 Plugin Name: KB Mailer
 Plugin URI: https://kreatiabyran.se
@@ -66,9 +65,44 @@ function kb_mailer_mail_metaboxes() {
 add_action( 'add_meta_boxes_kbmails', 'kb_mailer_mail_metaboxes' );
 
 
-function kb_mailer_mail_metaboxes_html() {
-	global $post;
-	$custom = get_post_custom( $post->ID );
-	$body   = $custom[ 'body' ][ 0 ] ?? '';
-	wp_editor( htmlspecialchars( $body ), 'kb-mailer-body' );
+
+function kb_mailer_mail_metaboxes_html( $post ) {
+	if ( 'kbmails' === $post->post_type ) {
+		$text = get_post_meta( $post->ID, 'kbm_body', true );
+		wp_editor(
+			$text,
+			'kbm-body',
+			array(
+				'media_buttons' => false,
+				'textarea_name' => 'kbm-body-input',
+			)
+		);
+	}
 }
+//add_action( 'edit_form_advanced', 'kb_mailer_mail_metaboxes_html' );
+
+add_action(
+	'save_post',
+	function( $post_id ) {
+		if ( ! empty( $_POST['kbm-body-input'] ) ) {
+			$data = wp_kses_post( $_POST['kbm-body-input'] );
+			update_post_meta( $post_id, 'kbm_body', $data );
+		}
+	}
+);
+
+function kbm_tiny_mce_editor( $in, $editor_id ) {
+
+	if ( 'kbm-body' === $editor_id ) { // Remove read more-button.
+		$toolbar1 = explode( ',', $in['toolbar1'] );
+
+		$key = array_search( 'wp_more', $toolbar1, true );
+		if ( false !== $key ) {
+			unset( $toolbar1[ $key ] );
+		}
+		$in['toolbar1'] = implode( ',', $toolbar1 );
+	}
+
+	return $in;
+}
+//add_filter( 'tiny_mce_before_init', 'kbm_tiny_mce_editor', 10, 2 );
