@@ -1,13 +1,33 @@
 <?php
+/**
+ * Class for each registered email.
+ *
+ * @package kb-mailer
+ */
 
 namespace KB_Mailer;
 
-use Cassandra\Set;
-
 class Email {
-	private $name;
+	/**
+	 * @var string Email identifier. Used for getting email to send or otherwise use.
+	 */
 	private $id;
+
+	/**
+	 * @var string Name of email. Displayed in wp-admin, and used as email subject if not explicitly set.
+	 */
+	private $name;
+
+	/**
+	 * @var string[] Variables used for dynamic content in emails.
+	 * Array element key is an id for the variable, used for replacement.
+	 * Element value is name of the variable, displayed in wp-admin.
+	 */
 	private $content_variables;
+
+	/**
+	 * @var Email_Options_Page Options page class for current email.
+	 */
 	private $options_page;
 
 	public function __construct( $id, $name, $content_variables = array() ) {
@@ -36,12 +56,24 @@ class Email {
 		return $this->name;
 	}
 
-	public function send( $to, $content_variables = array(), $subject = false ) {
+	/**
+	 * @param string $to                    Receiver email address.
+	 * @param string[] $content_variables   Variables to use as replacement in email content.
+	 * @param string                        Optional email subject. Defaults to email name.
+	 *
+	 * @return bool Whether the email was sent successfully.
+	 */
+	public function send( $to, $content_variables = array(), $subject = null ) {
 		$message = $this->render_email_content( $content_variables );
 		$subject = $subject ?? $this->name;
 		return wp_mail( $to, $subject, $message, array( 'Content-Type: text/html; charset=UTF-8' ) );
 	}
 
+	/**
+	 * @param $content_variables Variables to use as replacement in email content.
+	 *
+	 * @return string
+	 */
 	private function render_email_content( $content_variables ) {
 		$kbm_options     = get_option( 'kbm_styling_options' );
 		$main_color      = $kbm_options['main_color'] ?? Settings::get( 'main_color_default' );
@@ -132,9 +164,6 @@ class Email {
 			</table>
 		</div>
 		<?php
-
-		$message = ob_get_clean();
-
-		return $message;
+		return ob_get_clean();
 	}
 }

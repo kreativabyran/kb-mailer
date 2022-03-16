@@ -1,15 +1,30 @@
 <?php
+/**
+ * Plugin main options page.
+ *
+ * @package kb-mailer
+ */
 
 namespace KB_Mailer;
 
 class Options_Page {
+	/**
+	 * Holds the values to be used in the fields callbacks
+	 */
 	private $options;
+
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
 		add_action( 'admin_init', array( $this, 'page_init' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_color_picker' ) );
 	}
 
+	/**
+	 * Enqueues styles and scripts for color picker in wp-admin.
+	 * @param string $hook_suffix The current admin page.
+	 *
+	 * @return void
+	 */
 	public function enqueue_color_picker( $hook_suffix ) {
 		if ( 'toplevel_page_' . Settings::get( 'admin_page_slug' ) === $hook_suffix ) {
 			wp_enqueue_style( 'wp-color-picker' );
@@ -17,6 +32,10 @@ class Options_Page {
 		}
 	}
 
+	/**
+	 * Registers menu page.
+	 * @return void
+	 */
 	public function add_menu_page() {
 		\add_menu_page(
 			'KB Mailer',
@@ -29,12 +48,16 @@ class Options_Page {
 		);
 	}
 
+	/**
+	 * Renders menu page.
+	 * @return void
+	 */
 	public function render_menu_page() {
 		$this->options = get_option( 'kbm_styling_options' );
 		$emails        = Emails::get();
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'KB Mailer', 'kbm' ); ?></h1>
+			<h1><?php esc_html_e( 'KB Mailer', 'kb-mailer' ); ?></h1>
 			<form method="post" action="options.php">
 				<?php
 				settings_fields( 'kbm_styling_options_group' );
@@ -42,15 +65,15 @@ class Options_Page {
 				submit_button();
 				?>
 			</form>
-			<h3><?php esc_html_e( 'Emails', 'kbm' ); ?></h3>
+			<h3><?php esc_html_e( 'Emails', 'kb-mailer' ); ?></h3>
 			<?php
 			if ( ! empty( $emails ) ) {
 				?>
 					<table>
 						<thead>
 							<tr>
-								<th><?php esc_html_e( 'Name', 'kbm' ); ?></th>
-								<th><?php esc_html_e( 'Edit', 'kbm' ); ?></th>
+								<th><?php esc_html_e( 'Name', 'kb-mailer' ); ?></th>
+								<th><?php esc_html_e( 'Edit', 'kb-mailer' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -62,7 +85,7 @@ class Options_Page {
 										<td><?php echo esc_html( $email->get_name() ); ?></td>
 										<td>
 											<a href="<?php echo esc_url( admin_url( 'admin.php' ) . '?page=' . Settings::get( 'admin_page_slug' ) . '-' . $id ); ?>">
-												<?php esc_html_e( 'Edit', 'kbm' ); ?>
+												<?php esc_html_e( 'Edit', 'kb-mailer' ); ?>
 											</a>
 										</td>
 									</tr>
@@ -74,7 +97,7 @@ class Options_Page {
 					</table>
 				<?php
 			} else {
-				echo '<p>' . esc_html__( 'You have not added any emails', 'kbm' ) . '</p>';
+				echo '<p>' . esc_html__( 'You have not added any emails', 'kb-mailer' ) . '</p>';
 			}
 			?>
 		</div>
@@ -93,14 +116,14 @@ class Options_Page {
 
 		add_settings_section(
 			'kbm_styling_section', // ID
-			__( 'Styling', 'kbm' ), // Title
+			__( 'Styling', 'kb-mailer' ), // Title
 			array( $this, 'print_section_info' ), // Callback
 			Settings::get( 'admin_page_slug' ) // Page
 		);
 
 		add_settings_field(
 			'main_color', // ID
-			__( 'Main color', 'kbm' ), // Title
+			__( 'Main color', 'kb-mailer' ), // Title
 			array( $this, 'main_color_callback' ), // Callback
 			Settings::get( 'admin_page_slug' ), // Page
 			'kbm_styling_section' // Section
@@ -108,7 +131,7 @@ class Options_Page {
 
 		add_settings_field(
 			'secondary_color', // ID
-			__( 'Second color', 'kbm' ), // Title
+			__( 'Second color', 'kb-mailer' ), // Title
 			array( $this, 'secondary_color_callback' ), // Callback
 			Settings::get( 'admin_page_slug' ), // Page
 			'kbm_styling_section' // Section
@@ -119,7 +142,9 @@ class Options_Page {
 	/**
 	 * Sanitize each setting field as needed
 	 *
-	 * @param array $input Contains all settings fields as array keys
+	 * @param array $input Contains all settings fields as array keys.
+	 *
+	 * @return array Sanitized input.
 	 */
 	public function sanitize( $input ) {
 		$new_input = array();
@@ -139,9 +164,13 @@ class Options_Page {
 	 * Print the Section text
 	 */
 	public function print_section_info() {
-		esc_html_e( 'Styling for all KB Mailer emails', 'kbm' );
+		esc_html_e( 'Styling for all KB Mailer emails', 'kb-mailer' );
 	}
 
+	/**
+	 * Prints input for main color.
+	 * @return void
+	 */
 	public function main_color_callback() {
 		printf(
 			'<input type="text" id="main_color" class="kbm-color-pickers" data-default-color="' . Settings::get( 'main_color_default' ) . '" name="kbm_styling_options[main_color]" value="%s" />',
@@ -149,6 +178,10 @@ class Options_Page {
 		);
 	}
 
+	/**
+	 * Prints input for secondary color.
+	 * @return void
+	 */
 	public function secondary_color_callback() {
 		printf(
 			'<input type="text" id="secondary_color" class="kbm-color-pickers" data-default-color="' . Settings::get( 'secondary_color_default' ) . '" name="kbm_styling_options[secondary_color]" value="%s" />',

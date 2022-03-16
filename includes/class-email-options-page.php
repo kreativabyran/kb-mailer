@@ -1,15 +1,32 @@
 <?php
+/**
+ * Options page for each registered email.
+ *
+ * @package kb-mailer
+ */
 
 namespace KB_Mailer;
 
 class Email_Options_Page {
-
+	/**
+	 * @var string Email identifier. For identifying options for specific email.
+	 */
 	private $id;
+
+	/**
+	 * @var string Name of email. Displayed in wp-admin.
+	 */
 	private $name;
+
+	/**
+	 * @var string[] Variables used for dynamic content in emails.
+	 * Array element key is an id for the variable, used for replacement.
+	 * Element value is name of the variable, displayed in wp-admin.
+	 */
 	private $content_variables;
 
 	/**
-	 * Holds the values to be used in the fields callbacks
+	 * @var mixed $options Holds the values to be used in the fields callbacks
 	 */
 	private $options;
 
@@ -73,14 +90,14 @@ class Email_Options_Page {
 
 		add_settings_section(
 			'kbm_section_content_' . $this->id, // ID
-			__( 'Email Content', 'kbm' ), // Title
+			__( 'Email Content', 'kb-mailer' ), // Title
 			array( $this, 'print_section_info' ), // Callback
 			Settings::get( 'admin_page_slug' ) . '-' . $this->id // Page
 		);
 
 		add_settings_field(
 			'header', // ID
-			__( 'Header', 'kbm' ), // Title
+			__( 'Header', 'kb-mailer' ), // Title
 			array( $this, 'header_callback' ), // Callback
 			Settings::get( 'admin_page_slug' ) . '-' . $this->id, // Page
 			'kbm_section_content_' . $this->id // Section
@@ -88,7 +105,7 @@ class Email_Options_Page {
 
 		add_settings_field(
 			'body', // ID
-			__( 'Body', 'kbm' ), // Title
+			__( 'Body', 'kb-mailer' ), // Title
 			array( $this, 'body_callback' ), // Callback
 			Settings::get( 'admin_page_slug' ) . '-' . $this->id, // Page
 			'kbm_section_content_' . $this->id // Section
@@ -96,7 +113,7 @@ class Email_Options_Page {
 
 		add_settings_field(
 			'footer',
-			__( 'Footer', 'kbm' ),
+			__( 'Footer', 'kb-mailer' ),
 			array( $this, 'footer_callback' ),
 			Settings::get( 'admin_page_slug' ) . '-' . $this->id,
 			'kbm_section_content_' . $this->id
@@ -106,7 +123,9 @@ class Email_Options_Page {
 	/**
 	 * Sanitize each setting field as needed
 	 *
-	 * @param array $input Contains all settings fields as array keys
+	 * @param array $input Contains all settings fields as array keys.
+	 *
+	 * @return array Sanitized input.
 	 */
 	public function sanitize( $input ) {
 		$new_input = array();
@@ -131,13 +150,13 @@ class Email_Options_Page {
 	 */
 	public function print_section_info() {
 		if ( ! empty( $this->content_variables ) ) {
-			esc_html_e( 'The following content variables are available for use in the email:', 'kbm' );
+			esc_html_e( 'The following content variables are available for use in the email:', 'kb-mailer' );
 			?>
 			<table>
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Variable ID', 'kbm' ); ?></th>
-						<th><?php esc_html_e( 'Description', 'kbm' ); ?></th>
+						<th><?php esc_html_e( 'Variable ID', 'kb-mailer' ); ?></th>
+						<th><?php esc_html_e( 'Description', 'kb-mailer' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>

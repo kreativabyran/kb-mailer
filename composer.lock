@@ -30,7 +30,6 @@
                 "squizlabs/php_codesniffer": "dev-master",
                 "wp-coding-standards/wpcs": "^2.3"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "patches": {
@@ -62,10 +61,6 @@
                 "wordpress",
                 "wp"
             ],
-            "support": {
-                "issues": "https://github.com/pablo-sg-pacheco/wp-namespace-autoloader/issues",
-                "source": "https://github.com/pablo-sg-pacheco/wp-namespace-autoloader/tree/master"
-            },
             "time": "2021-02-27T19:04:16+00:00"
         }
     ],
@@ -187,5 +182,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "1.1.0"
 }
