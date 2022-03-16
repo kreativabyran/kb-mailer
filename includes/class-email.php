@@ -39,7 +39,7 @@ class Email {
 	public function send( $to, $content_variables = array(), $subject = false ) {
 		$message = $this->render_email_content( $content_variables );
 		$subject = $subject ?? $this->name;
-		wp_mail( $to, $subject, $message, array( 'Content-Type: text/html; charset=UTF-8' ) );
+		return wp_mail( $to, $subject, $message, array( 'Content-Type: text/html; charset=UTF-8' ) );
 	}
 
 	private function render_email_content( $content_variables ) {

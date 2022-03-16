@@ -42,7 +42,7 @@ if ( ! function_exists( 'kbm_register_email' ) ) {
 
 if ( ! function_exists( 'kbm_send_email' ) ) {
 	function kbm_send_email( $id, $to, $content_variables = array(), $subject = null ) {
-		\KB_Mailer\Emails::send(
+		return \KB_Mailer\Emails::send(
 			$id,
 			$to,
 			$content_variables,
