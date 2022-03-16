@@ -3,7 +3,7 @@
 Plugin Name: KB Mailer
 Plugin URI: https://kreatiabyran.se
 Description: Provides a simple way of building emails.
-Version: 1.0
+Version: 1.1
 Author: @oskarmodig
 Author URI: https://kreatiabyran.se
 */
@@ -41,11 +41,12 @@ if ( ! function_exists( 'kbm_register_email' ) ) {
 }
 
 if ( ! function_exists( 'kbm_send_email' ) ) {
-	function kbm_send_email( $id, $to, $content_variables ) {
+	function kbm_send_email( $id, $to, $content_variables = array(), $subject = null ) {
 		\KB_Mailer\Emails::send(
 			$id,
 			$to,
-			$content_variables
+			$content_variables,
+			$subject
 		);
 	}
 }

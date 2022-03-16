@@ -31,19 +31,28 @@ Go to wp-admin > KB Mailer to see a list with all registered emails, there you c
 ### Send email
 Registered emails are sent with `kbm_send_email()`
 
-| param              | type     | desc                                                                                                                        |
-|--------------------|----------|-----------------------------------------------------------------------------------------------------------------------------|
-| $id                | `string` | Email ID as registered in `kbm_register_email()`.                                                                           |
-| $to                | `string` | Email receiver address.                                                                                                     |
-| $content_variables | `array`  | _(Optional)_ Element key matches the one registered in `kbm_register_email()`.<br/>Value is what should be used the email.  |
+| param              | type     | desc                                                                                                                       |
+|--------------------|----------|----------------------------------------------------------------------------------------------------------------------------|
+| $id                | `string` | Email ID as registered in `kbm_register_email()`.                                                                          |
+| $to                | `string` | Email receiver address.                                                                                                    |
+| $content_variables | `array`  | _(Optional)_ Element key matches the one registered in `kbm_register_email()`.<br/>Value is what should be used the email. |
+| $subject           | `string` | _(Optional)_ Email subject. Name as registered in `kbm_register_email()` will be used if this is not supplied.             |
 Example:
 ```php
-kbm_send_email(
-    'contact',
-    'contact@example.com',
-    array(
-        'name'    => 'Oskar Modig',
-        'message' => 'Hi! I would really like to get in touch with you.',
-    )
-);
+if ( function_exists( 'kbm_send_email' ) ) {
+    $to = 'contact@example.com';
+    $name = 'Oskar Modig';
+    $message = 'Hi! I would really like to get in touch with you.';
+    kbm_send_email(
+        'contact',
+        $to,
+        array(
+            'name'    => $name,
+            'message' => $message,
+        )
+    );
+} else {
+    // Failsafe if plugin is unavailable.
+    wp_mail( $to, 'Contact request', "<h1>Contact request from $name</h1><p>$message</p>", array( 'Content-Type: text/html; charset=UTF-8' ) );
+}
 ```

@@ -17,7 +17,7 @@ class Emails {
 		}
 	}
 
-	public static function send( $id, $to, $content_variables = array(), $subject = false ) {
+	public static function send( $id, $to, $content_variables = array(), $subject = null ) {
 		$email = self::get( $id );
 		if ( $email ) {
 			$email->send( $to, $content_variables, $subject );
