@@ -33,6 +33,7 @@ tooling:
       - appserver: wp core install --url=kb-mailer.lndo.site --title="kb-mailer DEV" --admin_user=oskar --admin_password=password --admin_email=do@kre.co --path=wordpress
       # Symlink to the source theme files
       - appserver: cd /app/wordpress/wp-content/plugins/ && ln -snf ../../../ kb-mailer
+      - appserver: cd /app/wordpress/wp-content/themes/ && ln -snf ../../../test-theme test-theme
       # Run composer
       - appserver: composer install
   deploy:

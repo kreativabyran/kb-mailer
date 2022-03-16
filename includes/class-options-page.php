@@ -69,7 +69,7 @@ class Options_Page {
 			<?php
 			if ( ! empty( $emails ) ) {
 				?>
-					<table>
+					<table class="widefat fixed striped">
 						<thead>
 							<tr>
 								<th><?php esc_html_e( 'Name', 'kb-mailer' ); ?></th>

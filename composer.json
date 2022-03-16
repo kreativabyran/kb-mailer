@@ -21,6 +21,7 @@
       "composer.lock",
       "!vendor/",
       "wordpress/",
+      "test-theme/",
       "*.zip"
     ]
   }

@@ -15,11 +15,10 @@ First you have to register an email that you later can send. This is done with `
 
  Example:
  ```php
-if ( function_exists( 'kbm_register_email' ) {
+if ( function_exists( 'kbm_register_email' ) ) {
     kbm_register_email(
         'contact',
-        'Contact request'
-        }
+        'Contact request',
         array(
             'name'    => 'Name of person requesting contact',
             'message' => 'Message from person', 
