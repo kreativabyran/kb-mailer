@@ -8,7 +8,6 @@ Author: @oskarmodig
 Author URI: https://kreatiabyran.se
 */
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
