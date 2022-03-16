@@ -3,72 +3,82 @@
 namespace KB_Mailer;
 
 class Options_Page {
-
-	private $id;
-	private $name;
-	private $content_variables;
-
-	/**
-	 * Holds the values to be used in the fields callbacks
-	 */
 	private $options;
-
-	/**
-	 * Start up
-	 */
-	public function __construct( $id, $name, $content_variables ) {
-		$this->id                = $id;
-		$this->name              = $name;
-		$this->content_variables = $content_variables;
-
-		add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
+	public function __construct() {
+		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
 		add_action( 'admin_init', array( $this, 'page_init' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_color_picker' ) );
 	}
 
-	/**
-	 * Add options page
-	 */
-	public function add_plugin_page() {
+	public function enqueue_color_picker( $hook_suffix ) {
+		if ( 'toplevel_page_' . Settings::get( 'admin_page_slug' ) === $hook_suffix ) {
+			wp_enqueue_style( 'wp-color-picker' );
+			wp_enqueue_script( 'kbm-admin-script', KBM_URI . 'assets/admin-script.js', array( 'wp-color-picker' ), filemtime( KBM_DIR . 'assets/admin-script.js' ), true );
+		}
+	}
 
-		add_submenu_page(
-			'kb-mailer',
-			$this->name . ' - KB Mailer',
-			$this->name,
+	public function add_menu_page() {
+		\add_menu_page(
+			'KB Mailer',
+			'KB Mailer',
 			'manage_options',
-			'kbm_mail_' . $this->id,
-			array( $this, 'create_admin_page' )
+			Settings::get( 'admin_page_slug' ),
+			array( $this, 'render_menu_page' ),
+			'dashicons-email-alt',
+			120
 		);
 	}
 
-	/**
-	 * Options page callback
-	 */
-	public function create_admin_page() {
-		// Set class property
-		$this->options = get_option( 'kbm_options_' . $this->id );
+	public function render_menu_page() {
+		$this->options = get_option( 'kbm_styling_options' );
+		$emails        = Emails::get();
 		?>
 		<div class="wrap">
-			<h1><?php echo 'KB Mailer - ' . esc_html( $this->name ); ?></h1>
+			<h1><?php esc_html_e( 'KB Mailer', 'kbm' ); ?></h1>
 			<form method="post" action="options.php">
 				<?php
-				// This prints out all hidden setting fields
-				settings_fields( 'kbm_option_group_' . $this->id );
-				do_settings_sections( 'kbm_mail_' . $this->id );
+				settings_fields( 'kbm_styling_options_group' );
+				do_settings_sections( Settings::get( 'admin_page_slug' ) );
 				submit_button();
 				?>
 			</form>
+			<h3><?php esc_html_e( 'Emails', 'kbm' ); ?></h3>
+			<?php
+			if ( ! empty( $emails ) ) {
+				?>
+					<table>
+						<thead>
+							<tr>
+								<th><?php esc_html_e( 'Name', 'kbm' ); ?></th>
+								<th><?php esc_html_e( 'Edit', 'kbm' ); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							foreach ( $emails as $id => $email ) {
+								?>
+								<tbody>
+									<tr>
+										<td><?php echo esc_html( $email->get_name() ); ?></td>
+										<td>
+											<a href="<?php echo esc_url( admin_url( 'admin.php' ) . '?page=' . Settings::get( 'admin_page_slug' ) . '-' . $id ); ?>">
+												<?php esc_html_e( 'Edit', 'kbm' ); ?>
+											</a>
+										</td>
+									</tr>
+								</tbody>
+								<?php
+							}
+							?>
+						</tbody>
+					</table>
+				<?php
+			} else {
+				echo '<p>' . esc_html__( 'You have not added any emails', 'kbm' ) . '</p>';
+			}
+			?>
 		</div>
 		<?php
-
-		// TODO: Remove
-		Emails::send(
-			$this->id,
-			'o@kre.co',
-			array(
-				'triss' => 'kooooden',
-				'name'  => 'Oskar',
-			)
-		);
 	}
 
 	/**
@@ -76,41 +86,34 @@ class Options_Page {
 	 */
 	public function page_init() {
 		register_setting(
-			'kbm_option_group_' . $this->id, // Option group
-			'kbm_options_' . $this->id, // Option name
+			'kbm_styling_options_group', // Option group
+			'kbm_styling_options', // Option name
 			array( $this, 'sanitize' ) // Sanitize
 		);
 
 		add_settings_section(
-			'kbm_section_content_' . $this->id, // ID
-			__( 'Email Content', 'kbm' ), // Title
+			'kbm_styling_section', // ID
+			__( 'Styling', 'kbm' ), // Title
 			array( $this, 'print_section_info' ), // Callback
-			'kbm_mail_' . $this->id // Page
+			Settings::get( 'admin_page_slug' ) // Page
 		);
 
 		add_settings_field(
-			'header', // ID
-			__( 'Header', 'kbm' ), // Title
-			array( $this, 'header_callback' ), // Callback
-			'kbm_mail_' . $this->id, // Page
-			'kbm_section_content_' . $this->id // Section
+			'main_color', // ID
+			__( 'Main color', 'kbm' ), // Title
+			array( $this, 'main_color_callback' ), // Callback
+			Settings::get( 'admin_page_slug' ), // Page
+			'kbm_styling_section' // Section
 		);
 
 		add_settings_field(
-			'body', // ID
-			__( 'Body', 'kbm' ), // Title
-			array( $this, 'body_callback' ), // Callback
-			'kbm_mail_' . $this->id, // Page
-			'kbm_section_content_' . $this->id // Section
+			'secondary_color', // ID
+			__( 'Second color', 'kbm' ), // Title
+			array( $this, 'secondary_color_callback' ), // Callback
+			Settings::get( 'admin_page_slug' ), // Page
+			'kbm_styling_section' // Section
 		);
 
-		add_settings_field(
-			'footer',
-			__( 'Footer', 'kbm' ),
-			array( $this, 'footer_callback' ),
-			'kbm_mail_' . $this->id,
-			'kbm_section_content_' . $this->id
-		);
 	}
 
 	/**
@@ -121,16 +124,12 @@ class Options_Page {
 	public function sanitize( $input ) {
 		$new_input = array();
 
-		if ( isset( $input['header'] ) ) {
-			$new_input['header'] = sanitize_text_field( $input['header'] );
+		if ( isset( $input['main_color'] ) ) {
+			$new_input['main_color'] = sanitize_text_field( $input['main_color'] );
 		}
 
-		if ( isset( $input['body'] ) ) {
-			$new_input['body'] = wp_kses_post( $input['body'] );
-		}
-
-		if ( isset( $input['footer'] ) ) {
-			$new_input['footer'] = sanitize_text_field( $input['footer'] );
+		if ( isset( $input['secondary_color'] ) ) {
+			$new_input['secondary_color'] = sanitize_text_field( $input['secondary_color'] );
 		}
 
 		return $new_input;
@@ -140,66 +139,20 @@ class Options_Page {
 	 * Print the Section text
 	 */
 	public function print_section_info() {
-		if ( ! empty( $this->content_variables ) ) {
-			esc_html_e( 'The following content variables are available for use in the email:', 'kbm' );
-			?>
-			<table>
-				<thead>
-					<tr>
-						<th><?php esc_html_e( 'Variable ID', 'kbm' ); ?></th>
-						<th><?php esc_html_e( 'Description', 'kbm' ); ?></th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php
-					foreach ( $this->content_variables as $key => $content_variable ) {
-						?>
-							<tr>
-								<td><?php echo esc_html( $key ); ?></td>
-								<td><?php echo esc_html( $content_variable ); ?></td>
-							</tr>
-						<?php
-					}
-					?>
-				</tbody>
-			</table>
-			<?php
-		}
+		esc_html_e( 'Styling for all KB Mailer emails', 'kbm' );
 	}
 
-	/**
-	 * Get the settings option array and print one of its values
-	 */
-	public function header_callback() {
+	public function main_color_callback() {
 		printf(
-			'<input type="text" id="email_header" name="kbm_options_' . $this->id . '[header]" value="%s" />',
-			isset( $this->options['header'] ) ? esc_attr( $this->options['header'] ) : ''
+			'<input type="text" id="main_color" class="kbm-color-pickers" data-default-color="#221f47" name="kbm_styling_options[main_color]" value="%s" />',
+			isset( $this->options['main_color'] ) ? esc_attr( $this->options['main_color'] ) : ''
 		);
 	}
 
-	/**
-	 * Get the settings option array and print one of its values
-	 */
-	public function body_callback() {
-		$text = $this->options['body'] ?? '';
-		wp_editor(
-			$text,
-			'kbm-body',
-			array(
-				'media_buttons' => false,
-				'textarea_name' => 'kbm_options_' . $this->id . '[body]',
-			)
-		);
-	}
-
-	/**
-	 * Get the settings option array and print one of its values
-	 */
-	public function footer_callback() {
+	public function secondary_color_callback() {
 		printf(
-			'<input type="text" id="email_footer" name="kbm_options_' . $this->id . '[footer]" value="%s" />',
-			isset( $this->options['footer'] ) ? esc_attr( $this->options['footer'] ) : ''
+			'<input type="text" id="secondary_color" class="kbm-color-pickers" data-default-color="#ec6f6f" name="kbm_styling_options[secondary_color]" value="%s" />',
+			isset( $this->options['secondary_color'] ) ? esc_attr( $this->options['secondary_color'] ) : ''
 		);
 	}
-
 }

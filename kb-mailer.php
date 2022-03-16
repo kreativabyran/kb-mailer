@@ -8,7 +8,6 @@ Author: @oskarmodig
 Author URI: https://kreatiabyran.se
 */
 
-namespace KB_Mailer;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -21,36 +20,32 @@ require_once KBM_DIR . 'vendor/autoload.php';
 
 $autoloader = new \Pablo_Pacheco\WP_Namespace_Autoloader\WP_Namespace_Autoloader(
 	array(
-		'directory'        => __DIR__,     // Directory of your project. It can be your theme or plugin. Defaults to __DIR__ (probably your best bet).
-		'namespace_prefix' => 'KB_Mailer',      // Main namespace of your project. E.g My_Project\Admin\Tests should be My_Project. Defaults to the namespace of the instantiating file.
-		'classes_dir'      => 'includes',  // (optional). It is where your namespaced classes are located inside your project. If your classes are in the root level, leave this empty. If they are located on 'src' folder, write 'src' here
+		'directory'        => __DIR__,
+		'namespace_prefix' => 'KB_Mailer',
+		'classes_dir'      => 'includes',
 		'lowercase'        => array( 'file', 'folders' ),
 	)
 );
 $autoloader->init();
 
-add_action(
-	'admin_menu',
-	function () {
-		\add_menu_page(
-			'KB Mailer',
-			'KB Mailer',
-			'manage_options',
-			'kb-mailer',
-			function() {
-				echo 'KBMAILER!';
-			},
-			'',
-			120
+new \KB_Mailer\Options_Page();
+
+if ( ! function_exists( 'kbm_register_email' ) ) {
+	function kbm_register_email( $id, $name, $content_variables = array() ) {
+		new \KB_Mailer\Email(
+			$id,
+			$name,
+			$content_variables
 		);
 	}
-);
+}
 
-new Email(
-	'triss',
-	'Trisslott-mail',
-	array(
-		'name'  => __( 'Namn på mottagare', 'kbm' ),
-		'triss' => __( 'Trisslottskoden', 'kbm' ),
-	)
-);
+if ( ! function_exists( 'kbm_send_email' ) ) {
+	function kbm_send_email( $id, $to, $content_variables ) {
+		\KB_Mailer\Emails::send(
+			$id,
+			$to,
+			$content_variables
+		);
+	}
+}

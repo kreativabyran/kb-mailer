@@ -9,8 +9,12 @@ class Emails {
 		self::$emails[ $id ] = $email;
 	}
 
-	public static function get( $id ) {
-		return self::$emails[ $id ] ?? false;
+	public static function get( $id = false ) {
+		if ( $id ) {
+			return self::$emails[ $id ] ?? false;
+		} else {
+			return self::$emails;
+		}
 	}
 
 	public static function send( $id, $to, $content_variables = array(), $subject = false ) {

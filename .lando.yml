@@ -35,6 +35,13 @@ tooling:
       - appserver: cd /app/wordpress/wp-content/plugins/ && ln -snf ../../../ kb-mailer
       # Run composer
       - appserver: composer install
+  deploy:
+    description: Create installable plugin zip
+    cmd:
+      - appserver: composer update --no-dev --optimize-autoloader
+      - appserver: rm -f kb-mailer-latest.zip
+      - appserver: composer archive --format=zip --file kb-mailer-latest
+      - appserver: composer update
 
 events:
   pre-db-import:

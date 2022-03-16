@@ -1,7 +1,6 @@
 {
   "require": {
-    "pablo-sg-pacheco/wp-namespace-autoloader": "dev-master",
-    "vlucas/phpdotenv": "^5.4"
+    "pablo-sg-pacheco/wp-namespace-autoloader": "dev-master"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.6",
@@ -11,6 +10,18 @@
     "post-install-cmd": [
       "vendor\\squizlabs\\php_codesniffer\\bin\\phpcs.bat --config-set installed_paths ..\\..\\wp-coding-standards\\wpcs\\",
       "vendor\\squizlabs\\php_codesniffer\\bin\\phpcs.bat --config-set default_standard WordPress-Extra"
+    ]
+  },
+  "archive": {
+    "exclude": [
+      ".gitignore",
+      ".gitattributes",
+      ".lando.yml",
+      "composer.json",
+      "composer.lock",
+      "!vendor/",
+      "wordpress/",
+      "*.zip"
     ]
   }
 }
