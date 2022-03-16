@@ -2,6 +2,8 @@
 
 namespace KB_Mailer;
 
+use Cassandra\Set;
+
 class Email {
 	private $name;
 	private $id;
@@ -41,9 +43,11 @@ class Email {
 	}
 
 	private function render_email_content( $content_variables ) {
-		$kbm_options   = get_option( 'kbm_styling_options' );
-		$email_options = get_option( 'kbm_options_' . $this->id );
+		$kbm_options     = get_option( 'kbm_styling_options' );
+		$main_color      = $kbm_options['main_color'] ?? Settings::get( 'main_color_default' );
+		$secondary_color = $kbm_options['secondary_color'] ?? Settings::get( 'secondary_color_default' );
 
+		$email_options = get_option( 'kbm_options_' . $this->id );
 		$email_content = array(
 			'header' => $email_options['header'],
 			'body'   => $email_options['body'],
@@ -67,11 +71,11 @@ class Email {
 								<tbody>
 									<tr>
 										<td align="center" valign="top">
-											<table border="0" cellpadding="0" cellspacing="0" width="100%"  style="background-color:<?php echo esc_attr( $kbm_options['main_color'] ); ?>;color:<?php echo esc_attr( $kbm_options['secondary_color'] ); ?>;border-bottom:0;font-weight:bold;line-height:100%;vertical-align:middle;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;border-radius:3px 3px 0 0">
+											<table border="0" cellpadding="0" cellspacing="0" width="100%"  style="background-color:<?php echo esc_attr( $main_color ); ?>;color:<?php echo esc_attr( $secondary_color ); ?>;border-bottom:0;font-weight:bold;line-height:100%;vertical-align:middle;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;border-radius:3px 3px 0 0">
 												<tbody>
 													<tr>
 														<td style="padding:36px 48px;display:block">
-															<h1 style="font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;font-size:30px;font-weight:300;line-height:150%;margin:0;text-align:left;color:<?php echo esc_attr( $kbm_options['secondary_color'] ); ?>;background-color:inherit"><?php echo esc_html( $email_content['header'] ); ?></h1>
+															<h1 style="font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;font-size:30px;font-weight:300;line-height:150%;margin:0;text-align:left;color:<?php echo esc_attr( $secondary_color ); ?>;background-color:inherit"><?php echo esc_html( $email_content['header'] ); ?></h1>
 														</td>
 													</tr>
 												</tbody>

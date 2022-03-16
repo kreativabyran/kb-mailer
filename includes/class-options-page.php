@@ -144,14 +144,14 @@ class Options_Page {
 
 	public function main_color_callback() {
 		printf(
-			'<input type="text" id="main_color" class="kbm-color-pickers" data-default-color="#221f47" name="kbm_styling_options[main_color]" value="%s" />',
+			'<input type="text" id="main_color" class="kbm-color-pickers" data-default-color="' . Settings::get( 'main_color_default' ) . '" name="kbm_styling_options[main_color]" value="%s" />',
 			isset( $this->options['main_color'] ) ? esc_attr( $this->options['main_color'] ) : ''
 		);
 	}
 
 	public function secondary_color_callback() {
 		printf(
-			'<input type="text" id="secondary_color" class="kbm-color-pickers" data-default-color="#ec6f6f" name="kbm_styling_options[secondary_color]" value="%s" />',
+			'<input type="text" id="secondary_color" class="kbm-color-pickers" data-default-color="' . Settings::get( 'secondary_color_default' ) . '" name="kbm_styling_options[secondary_color]" value="%s" />',
 			isset( $this->options['secondary_color'] ) ? esc_attr( $this->options['secondary_color'] ) : ''
 		);
 	}

@@ -7,6 +7,8 @@ class Settings {
 		'admin_page_slug'         => 'kb-mailer',
 		'content_variable_before' => '%',
 		'content_variable_after'  => '%',
+		'main_color_default'      => '#221f47',
+		'secondary_color_default' => '#ec6f6f',
 	);
 
 	public static function get( $key = null ) {
