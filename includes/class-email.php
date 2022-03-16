@@ -50,7 +50,7 @@ class Email {
 		$email_options = get_option( 'kbm_options_' . $this->id );
 		$email_content = array(
 			'header' => $email_options['header'] ?? '',
-			'body'   => $email_options['body'] ?? '',
+			'body'   => wpautop( $email_options['body'] ) ?? '',
 			'footer' => $email_options['footer'] ?? '',
 		);
 
