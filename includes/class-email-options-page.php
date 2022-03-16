@@ -59,16 +59,6 @@ class Email_Options_Page {
 			</form>
 		</div>
 		<?php
-
-		// TODO: Remove
-		Emails::send(
-			$this->id,
-			'o@kre.co',
-			array(
-				'triss' => 'kooooden',
-				'name'  => 'Oskar',
-			)
-		);
 	}
 
 	/**
