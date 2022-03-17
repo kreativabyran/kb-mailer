@@ -28,7 +28,7 @@ class Options_Page {
 	public function enqueue_color_picker( $hook_suffix ) {
 		if ( 'toplevel_page_' . Settings::get( 'admin_page_slug' ) === $hook_suffix ) {
 			wp_enqueue_style( 'wp-color-picker' );
-			wp_enqueue_script( 'kbm-admin-script', KBM_URI . 'assets/admin-script.js', array( 'wp-color-picker' ), filemtime( KBM_DIR . 'assets/admin-script.js' ), true );
+			wp_enqueue_script( 'kbm-options-page-script', KBM_URI . 'assets/options-page-script.js', array( 'wp-color-picker' ), filemtime( KBM_DIR . 'assets/options-page-script.js' ), true );
 		}
 	}
 
@@ -74,6 +74,7 @@ class Options_Page {
 							<tr>
 								<th><?php esc_html_e( 'Name', 'kb-mailer' ); ?></th>
 								<th><?php esc_html_e( 'Edit', 'kb-mailer' ); ?></th>
+								<th><?php esc_html_e( 'Test', 'kb-mailer' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -85,7 +86,12 @@ class Options_Page {
 										<td><?php echo esc_html( $email->get_name() ); ?></td>
 										<td>
 											<a href="<?php echo esc_url( admin_url( 'admin.php' ) . '?page=' . Settings::get( 'admin_page_slug' ) . '-' . $id ); ?>">
-												<?php esc_html_e( 'Edit', 'kb-mailer' ); ?>
+												<span class="dashicons dashicons-edit"></span>
+											</a>
+										</td>
+										<td>
+											<a href="<?php echo esc_url( admin_url( 'admin.php' ) . '?page=' . Settings::get( 'admin_page_slug' ) . '-test-' . $id ); ?>">
+												<span class="dashicons dashicons-email-alt2"></span>
 											</a>
 										</td>
 									</tr>

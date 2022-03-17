@@ -3,7 +3,7 @@
 Plugin Name: KB Mailer
 Plugin URI: https://kreatiabyran.se
 Description: Provides a simple way of building emails.
-Version: 1.3
+Version: 1.4
 Author: @oskarmodig
 Author URI: https://kreatiabyran.se
 */
@@ -12,8 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'KBM_DIR', plugin_dir_path( __FILE__ ) . '/' );
-define( 'KBM_URI', plugin_dir_url( __FILE__ ) . '/' );
+define( 'KBM_DIR', plugin_dir_path( __FILE__ ) );
+define( 'KBM_URI', plugin_dir_url( __FILE__ ) );
 
 require_once KBM_DIR . 'vendor/autoload.php';
 

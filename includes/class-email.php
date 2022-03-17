@@ -30,6 +30,11 @@ class Email {
 	 */
 	private $options_page;
 
+	/**
+	 * @var Email_Test_Page Test page class for current email.
+	 */
+	private $test_page;
+
 	public function __construct( $id, $name, $content_variables = array() ) {
 		$this->id                = sanitize_title( $id );
 		$this->name              = sanitize_text_field( $name );
@@ -37,6 +42,7 @@ class Email {
 
 		if ( is_admin() ) {
 			$this->options_page = new Email_Options_Page( $this->id, $this->name, $this->content_variables );
+			$this->test_page    = new Email_Test_Page( $this->id, $this->name, $this->content_variables );
 		}
 
 		Emails::add( $this->id, $this );

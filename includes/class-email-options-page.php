@@ -65,6 +65,7 @@ class Email_Options_Page {
 		$this->options = get_option( 'kbm_options_' . $this->id );
 		?>
 		<div class="wrap">
+			<a href="<?php echo esc_url( admin_url( 'admin.php' ) . '?page=' . Settings::get( 'admin_page_slug' ) ); ?>"><?php esc_html_e( 'Go back', 'kb-mailer' ); ?></a>
 			<h1><?php echo 'KB Mailer - ' . esc_html( $this->name ); ?></h1>
 			<form method="post" action="options.php">
 				<?php
@@ -74,6 +75,9 @@ class Email_Options_Page {
 				submit_button();
 				?>
 			</form>
+			<div style="margin-top: 20px;">
+				<a href="<?php echo esc_url( admin_url( 'admin.php' ) . '?page=' . Settings::get( 'admin_page_slug' ) ); ?>"><?php esc_html_e( 'Go back', 'kb-mailer' ); ?></a>
+			</div>
 		</div>
 		<?php
 	}
@@ -150,9 +154,9 @@ class Email_Options_Page {
 	 */
 	public function print_section_info() {
 		if ( ! empty( $this->content_variables ) ) {
-			esc_html_e( 'The following content variables are available for use in the email:', 'kb-mailer' );
+			echo '<p>' . esc_html__( 'The following content variables are available for use in the email:', 'kb-mailer' ) . '</p>';
 			?>
-			<table>
+			<table class="widefat fixed striped">
 				<thead>
 					<tr>
 						<th><?php esc_html_e( 'Variable ID', 'kb-mailer' ); ?></th>
@@ -210,5 +214,4 @@ class Email_Options_Page {
 			isset( $this->options['footer'] ) ? esc_attr( $this->options['footer'] ) : ''
 		);
 	}
-
 }
