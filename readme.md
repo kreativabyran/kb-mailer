@@ -41,10 +41,10 @@ Registered emails are sent with `kbm_send_email()`
 | $subject           | `string` | _(Optional)_ Email subject. Name as registered in `kbm_register_email()` will be used if this is not supplied.             |
 Example:
 ```php
+$to      = 'contact@example.com';
+$name    = 'Oskar Modig';
+$message = 'Hi! I would really like to get in touch with you.';
 if ( function_exists( 'kbm_send_email' ) ) {
-    $to = 'contact@example.com';
-    $name = 'Oskar Modig';
-    $message = 'Hi! I would really like to get in touch with you.';
     kbm_send_email(
         'contact',
         $to,
