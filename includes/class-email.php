@@ -94,7 +94,7 @@ class Email {
 
 		if ( ! empty( $content_variables ) ) {
 			foreach ( $content_variables as $key => $variable ) {
-				$email_content = str_replace( Settings::get( 'content_variable_before' ) . $key . Settings::get( 'content_variable_after' ), $variable, $email_content );
+				$email_content = str_replace( apply_filters( 'kb_mailer_content_variable_before', '%' ) . $key . apply_filters( 'kb_mailer_content_variable_after', '%' ), $variable, $email_content );
 			}
 		}
 

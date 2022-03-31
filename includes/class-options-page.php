@@ -40,7 +40,7 @@ class Options_Page {
 		\add_menu_page(
 			'KB Mailer',
 			'KB Mailer',
-			'manage_options',
+			apply_filters( 'kb_mailer_admin_page_capability', 'manage_options' ),
 			Settings::get( 'admin_page_slug' ),
 			array( $this, 'render_menu_page' ),
 			'dashicons-email-alt',

@@ -51,7 +51,7 @@ class Email_Options_Page {
 			null,
 			$this->name . ' - KB Mailer',
 			$this->name,
-			'manage_options',
+			apply_filters( 'kb_mailer_admin_page_capability', 'manage_options' ),
 			Settings::get( 'admin_page_slug' ) . '-' . $this->id,
 			array( $this, 'create_admin_page' )
 		);
@@ -168,7 +168,7 @@ class Email_Options_Page {
 					foreach ( $this->content_variables as $key => $content_variable ) {
 						?>
 							<tr>
-								<td><?php echo esc_html( Settings::get( 'content_variable_before' ) . $key . Settings::get( 'content_variable_after' ) ); ?></td>
+								<td><?php echo esc_html( apply_filters( 'kb_mailer_content_variable_before', '%' ) . $key . apply_filters( 'kb_mailer_content_variable_after', '%' ) ); ?></td>
 								<td><?php echo esc_html( $content_variable ); ?></td>
 							</tr>
 						<?php

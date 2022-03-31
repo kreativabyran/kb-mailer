@@ -58,3 +58,11 @@ if ( function_exists( 'kbm_send_email' ) ) {
     wp_mail( $to, 'Contact request', "<h1>Contact request from $name</h1><p>$message</p>", array( 'Content-Type: text/html; charset=UTF-8' ) );
 }
 ```
+
+## Configuration
+### Permissions
+KB Mailer defaults to showing the email builder interface in wp-admin to user with the `manage_options` capability. The required capability can be changed with the `kb_mailer_admin_page_capability`-filter.
+### Variable separators
+The default variable separator is `%`. Meaning that `%name%` entered in the email content will be replaced with the value for that variable. The percentage sign before and/or after the variable id can be replaced with the following filters:
+- `kb_mailer_content_variable_before`
+- `kb_mailer_content_variable_after`

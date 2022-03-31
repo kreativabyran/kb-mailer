@@ -34,7 +34,6 @@ class Email_Test_Page {
 		$this->content_variables = $content_variables;
 
 		add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
-		//      add_action( 'admin_init', array( $this, 'page_init' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'wp_ajax_kbm_send_test_mail', array( $this, 'ajax_test_mail' ) );
 	}
@@ -68,7 +67,7 @@ class Email_Test_Page {
 			null,
 			$this->name . ' - Test - KB Mailer',
 			$this->name,
-			'manage_options',
+			apply_filters( 'kb_mailer_admin_page_capability', 'manage_options' ),
 			Settings::get( 'admin_page_slug' ) . '-test-' . $this->id,
 			array( $this, 'create_admin_page' )
 		);
