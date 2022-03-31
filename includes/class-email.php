@@ -100,20 +100,20 @@ class Email {
 
 		ob_start();
 		?>
-		<div style="background-color:#f7f7f7;margin:0;padding:70px 0;width:100%">
+		<div style="background-color:<?php echo esc_attr( $main_color ); ?>;margin:0;padding:20px 0;width:100%">
 			<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
 				<tbody>
 					<tr>
 						<td align="center" valign="top">
-							<table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color:#ffffff;border:1px solid #dedede;border-radius:3px">
+							<table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color:#ffffff;border-radius:2px">
 								<tbody>
 									<tr>
 										<td align="center" valign="top">
-											<table border="0" cellpadding="0" cellspacing="0" width="100%"  style="background-color:<?php echo esc_attr( $main_color ); ?>;color:<?php echo esc_attr( $secondary_color ); ?>;border-bottom:0;font-weight:bold;line-height:100%;vertical-align:middle;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;border-radius:3px 3px 0 0">
+											<table border="0" cellpadding="0" cellspacing="0" width="100%"  style="background-color:<?php echo esc_attr( $main_color ); ?>;border-bottom:0;font-weight:bold;line-height:100%;vertical-align:middle;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;border-radius:2px 2px 0 0;padding:0 32px;">
 												<tbody>
 													<tr>
-														<td style="padding:36px 48px;display:block">
-															<h1 style="font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;font-size:30px;font-weight:300;line-height:150%;margin:0;text-align:left;color:<?php echo esc_attr( $secondary_color ); ?>;background-color:inherit"><?php echo esc_html( $email_content['header'] ); ?></h1>
+														<td style="display:block">
+															<h1 style="font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;font-size:30px;font-weight:400;line-height:150%;margin:0;text-align:left;padding:32px 0 20px;border-bottom: 1px solid #eee;"><?php echo esc_html( $email_content['header'] ); ?></h1>
 														</td>
 													</tr>
 												</tbody>
@@ -125,11 +125,11 @@ class Email {
 											<table border="0" cellpadding="0" cellspacing="0" width="600">
 												<tbody>
 													<tr>
-														<td valign="top" style="background-color:#ffffff">
+														<td valign="top" style="background-color:#ffffff;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;font-weight:400;">
 															<table border="0" cellpadding="20" cellspacing="0" width="100%">
 																<tbody>
 																	<tr>
-																		<td valign="top" style="padding:48px 48px 32px">
+																		<td valign="top" style="padding:32px">
 																			<?php echo wp_kses_post( $email_content['body'] ); ?>
 																		</td>
 																	</tr>
@@ -141,16 +141,21 @@ class Email {
 											</table>
 										</td>
 									</tr>
-								</tbody>
-							</table>
-						</td>
-					</tr>
-					<tr>
-						<td align="center" valign="top">
-							<table border="0" cellpadding="10" cellspacing="0" width="600">
-								<tbody>
 									<tr>
-										<td valign="top" style="padding:0;border-radius:6px">
+										<td valign="top" style="padding:0;">
+											<table border="0" cellpadding="10" cellspacing="0" width="100%">
+												<tbody>
+													<tr>
+														<td colspan="2" valign="middle" style="text-align:center;padding:24px 0 0 0">
+															<img src="KB-logo.png" alt="logotyp" width="200">
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td valign="top" style="padding:0;">
 											<table border="0" cellpadding="10" cellspacing="0" width="100%">
 												<tbody>
 													<tr>
