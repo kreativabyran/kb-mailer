@@ -81,15 +81,21 @@ class Email {
 	 * @return string
 	 */
 	private function render_email_content( $content_variables ) {
-		$kbm_options     = get_option( 'kbm_styling_options' );
-		$main_color      = $kbm_options['main_color'] ?? Settings::get( 'main_color_default' );
-		$secondary_color = $kbm_options['secondary_color'] ?? Settings::get( 'secondary_color_default' );
+		$kbm_options = get_option( 'kbm_styling_options' );
+		$main_color  = $kbm_options['main_color'] ?? Settings::get( 'main_color_default' );
+		$logo        = $kbm_options['logo'] ?? false;
+		$logo_url    = $kbm_options['logo_url'] ?? false;
+		$footer      = $kbm_options['footer'] ?? false;
+
+		if ( ! empty( $logo ) ) {
+			$image_attributes = wp_get_attachment_image_src( $logo, 'medium' );
+			$logo             = $image_attributes[0];
+		}
 
 		$email_options = get_option( 'kbm_options_' . $this->id );
 		$email_content = array(
 			'header' => $email_options['header'] ?? '',
 			'body'   => wpautop( $email_options['body'] ) ?? '',
-			'footer' => $email_options['footer'] ?? '',
 		);
 
 		if ( ! empty( $content_variables ) ) {
@@ -98,83 +104,18 @@ class Email {
 			}
 		}
 
-		ob_start();
-		?>
-		<div style="background-color:<?php echo esc_attr( $main_color ); ?>;margin:0;padding:20px 0;width:100%">
-			<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
-				<tbody>
-					<tr>
-						<td align="center" valign="top">
-							<table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color:#ffffff;border-radius:2px">
-								<tbody>
-									<tr>
-										<td align="center" valign="top">
-											<table border="0" cellpadding="0" cellspacing="0" width="100%"  style="background-color:<?php echo esc_attr( $main_color ); ?>;border-bottom:0;font-weight:bold;line-height:100%;vertical-align:middle;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;border-radius:2px 2px 0 0;padding:0 32px;">
-												<tbody>
-													<tr>
-														<td style="display:block">
-															<h1 style="font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;font-size:30px;font-weight:400;line-height:150%;margin:0;text-align:left;padding:32px 0 20px;border-bottom: 1px solid #eee;"><?php echo esc_html( $email_content['header'] ); ?></h1>
-														</td>
-													</tr>
-												</tbody>
-											</table>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<table border="0" cellpadding="0" cellspacing="0" width="600">
-												<tbody>
-													<tr>
-														<td valign="top" style="background-color:#ffffff;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;font-weight:400;">
-															<table border="0" cellpadding="20" cellspacing="0" width="100%">
-																<tbody>
-																	<tr>
-																		<td valign="top" style="padding:32px">
-																			<?php echo wp_kses_post( $email_content['body'] ); ?>
-																		</td>
-																	</tr>
-																</tbody>
-															</table>
-														</td>
-													</tr>
-												</tbody>
-											</table>
-										</td>
-									</tr>
-									<tr>
-										<td valign="top" style="padding:0;">
-											<table border="0" cellpadding="10" cellspacing="0" width="100%">
-												<tbody>
-													<tr>
-														<td colspan="2" valign="middle" style="text-align:center;padding:24px 0 0 0">
-															<img src="KB-logo.png" alt="logotyp" width="200">
-														</td>
-													</tr>
-												</tbody>
-											</table>
-										</td>
-									</tr>
-									<tr>
-										<td valign="top" style="padding:0;">
-											<table border="0" cellpadding="10" cellspacing="0" width="100%">
-												<tbody>
-													<tr>
-														<td colspan="2" valign="middle" style="border-radius:6px;border:0;color:#858585;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;font-size:12px;line-height:150%;text-align:center;padding:24px 0">
-															<?php echo esc_html( $email_content['footer'] ); ?>
-														</td>
-													</tr>
-												</tbody>
-											</table>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<?php
-		return ob_get_clean();
+		$email = new Template(
+			'default-email',
+			array(
+				'main_color' => $main_color,
+				'header'     => $email_content['header'],
+				'body'       => $email_content['body'],
+				'footer'     => $footer,
+				'logo'       => $logo,
+				'logo_url'   => $logo_url,
+			)
+		);
+
+		return $email->get();
 	}
 }

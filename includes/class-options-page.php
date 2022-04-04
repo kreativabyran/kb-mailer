@@ -16,7 +16,7 @@ class Options_Page {
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
 		add_action( 'admin_init', array( $this, 'page_init' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_color_picker' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_option_scripts' ) );
 	}
 
 	/**
@@ -25,10 +25,18 @@ class Options_Page {
 	 *
 	 * @return void
 	 */
-	public function enqueue_color_picker( $hook_suffix ) {
+	public function enqueue_option_scripts( $hook_suffix ) {
 		if ( 'toplevel_page_' . Settings::get( 'admin_page_slug' ) === $hook_suffix ) {
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_script( 'kbm-options-page-script', KBM_URI . 'assets/options-page-script.js', array( 'wp-color-picker' ), filemtime( KBM_DIR . 'assets/options-page-script.js' ), true );
+			wp_localize_script(
+				'kbm-options-page-script',
+				'kbm_options_page_script',
+				array(
+					'remove_image_confirm' => __( 'Are you sure you want to remove the logo?', 'kb-mailer' ),
+				)
+			);
+			wp_enqueue_media();
 		}
 	}
 
@@ -58,13 +66,6 @@ class Options_Page {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'KB Mailer', 'kb-mailer' ); ?></h1>
-			<form method="post" action="options.php">
-				<?php
-				settings_fields( 'kbm_styling_options_group' );
-				do_settings_sections( Settings::get( 'admin_page_slug' ) );
-				submit_button();
-				?>
-			</form>
 			<h3><?php esc_html_e( 'Emails', 'kb-mailer' ); ?></h3>
 			<?php
 			if ( ! empty( $emails ) ) {
@@ -106,6 +107,13 @@ class Options_Page {
 				echo '<p>' . esc_html__( 'You have not added any emails', 'kb-mailer' ) . '</p>';
 			}
 			?>
+			<form method="post" action="options.php">
+				<?php
+				settings_fields( 'kbm_styling_options_group' );
+				do_settings_sections( Settings::get( 'admin_page_slug' ) );
+				submit_button();
+				?>
+			</form>
 		</div>
 		<?php
 	}
@@ -136,11 +144,27 @@ class Options_Page {
 		);
 
 		add_settings_field(
-			'secondary_color', // ID
-			__( 'Second color', 'kb-mailer' ), // Title
-			array( $this, 'secondary_color_callback' ), // Callback
-			Settings::get( 'admin_page_slug' ), // Page
-			'kbm_styling_section' // Section
+			'logo',
+			__( 'Logo', 'kb-mailer' ),
+			array( $this, 'logo_callback' ),
+			Settings::get( 'admin_page_slug' ),
+			'kbm_styling_section'
+		);
+
+		add_settings_field(
+			'logo_url',
+			__( 'Logo URL', 'kb-mailer' ),
+			array( $this, 'logo_url_callback' ),
+			Settings::get( 'admin_page_slug' ),
+			'kbm_styling_section'
+		);
+
+		add_settings_field(
+			'footer',
+			__( 'Footer', 'kb-mailer' ),
+			array( $this, 'footer_callback' ),
+			Settings::get( 'admin_page_slug' ),
+			'kbm_styling_section'
 		);
 
 	}
@@ -159,8 +183,16 @@ class Options_Page {
 			$new_input['main_color'] = sanitize_text_field( $input['main_color'] );
 		}
 
-		if ( isset( $input['secondary_color'] ) ) {
-			$new_input['secondary_color'] = sanitize_text_field( $input['secondary_color'] );
+		if ( isset( $input['footer'] ) ) {
+			$new_input['footer'] = wp_kses_post( $input['footer'] );
+		}
+
+		if ( isset( $input['logo'] ) ) {
+			$new_input['logo'] = sanitize_text_field( $input['logo'] );
+		}
+
+		if ( isset( $input['logo_url'] ) ) {
+			$new_input['logo_url'] = esc_url( $input['logo_url'] );
 		}
 
 		return $new_input;
@@ -170,7 +202,7 @@ class Options_Page {
 	 * Print the Section text
 	 */
 	public function print_section_info() {
-		esc_html_e( 'Styling for all KB Mailer emails', 'kb-mailer' );
+		esc_html_e( 'Styling and content for all KB Mailer emails', 'kb-mailer' );
 	}
 
 	/**
@@ -185,13 +217,55 @@ class Options_Page {
 	}
 
 	/**
-	 * Prints input for secondary color.
-	 * @return void
+	 * Get the settings option array and print one of its values
 	 */
-	public function secondary_color_callback() {
-		printf(
-			'<input type="text" id="secondary_color" class="kbm-color-pickers" data-default-color="' . Settings::get( 'secondary_color_default' ) . '" name="kbm_styling_options[secondary_color]" value="%s" />',
-			isset( $this->options['secondary_color'] ) ? esc_attr( $this->options['secondary_color'] ) : ''
+	public function footer_callback() {
+		$text = $this->options['footer'] ?? '';
+		wp_editor(
+			$text,
+			'kbm-footer',
+			array(
+				'media_buttons' => false,
+				'textarea_name' => 'kbm_styling_options[footer]',
+			)
 		);
+	}
+
+	/**
+	 * Get the settings option array and print one of its values
+	 */
+	public function logo_url_callback() {
+		printf(
+			'<input type="text" id="logo_url" name="kbm_styling_options[logo_url]" value="%s" />',
+			isset( $this->options['logo_url'] ) ? esc_attr( $this->options['logo_url'] ) : ''
+		);
+	}
+
+	/**
+	 * Get the settings option array and print one of its values
+	 */
+	public function logo_callback() {
+		$logo = $this->options['logo'] ?? '';
+
+		if ( ! empty( $logo ) ) {
+			$image_attributes = wp_get_attachment_image_src( $logo, 'medium' );
+			$src              = $image_attributes[0];
+			$value            = $logo;
+		} else {
+			$value = '';
+			$src   = '';
+		}
+
+		// Print HTML field
+		echo '
+        <div class="upload">
+            <img src="' . esc_url( $src ) . '" width="200px" style="' . ( empty( $logo ) ? 'display: none;' : '' ) . '"/>
+            <div>
+                <input type="hidden" name="kbm_styling_options[logo]" id="kbm_styling_options[logo]" value="' . esc_attr( $value ) . '" />
+                <button type="submit" class="upload_image_button button">' . esc_html__( 'Upload', 'kb-mailer' ) . '</button>
+                <button type="submit" class="remove_image_button button"style="' . ( empty( $logo ) ? 'display: none;' : '' ) . '">&times;</button>
+            </div>
+        </div>
+    ';
 	}
 }
