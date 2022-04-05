@@ -19,6 +19,11 @@ class Email {
 	private $name;
 
 	/**
+	 * @var string Email subject.
+	 */
+	private $subject;
+
+	/**
 	 * @var string[] Variables used for dynamic content in emails.
 	 * Array element key is an id for the variable, used for replacement.
 	 * Element value is name of the variable, displayed in wp-admin.
@@ -35,9 +40,10 @@ class Email {
 	 */
 	private $test_page;
 
-	public function __construct( $id, $name, $content_variables = array() ) {
+	public function __construct( $id, $name, $content_variables = array(), $subject = null ) {
 		$this->id                = sanitize_title( $id );
 		$this->name              = sanitize_text_field( $name );
+		$this->subject           = sanitize_text_field( $subject );
 		$this->content_variables = $content_variables;
 
 		if ( is_admin() ) {
@@ -51,15 +57,22 @@ class Email {
 	/**
 	 * @return string
 	 */
-	public function get_id(): string {
+	public function get_id() {
 		return $this->id;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function get_name(): string {
+	public function get_name() {
 		return $this->name;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function get_default_subject() {
+		return $this->subject ?? $this->name;
 	}
 
 	/**
@@ -71,12 +84,12 @@ class Email {
 	 */
 	public function send( $to, $content_variables = array(), $subject = null ) {
 		$message = $this->render_email_content( $content_variables );
-		$subject = $subject ?? $this->name;
+		$subject = $subject ?? $this->get_default_subject();
 		return wp_mail( $to, $subject, $message, array( 'Content-Type: text/html; charset=UTF-8' ) );
 	}
 
 	/**
-	 * @param $content_variables Variables to use as replacement in email content.
+	 * @param array $content_variables Variables to use as replacement in email content.
 	 *
 	 * @return string
 	 */

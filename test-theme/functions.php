@@ -11,7 +11,8 @@ if ( function_exists( 'kbm_register_email' ) ) {
 		array(
 			'name'    => 'Name of person requesting contact',
 			'message' => 'Message from person',
-		)
+		),
+		'Contact request email'
 	);
 }
 
