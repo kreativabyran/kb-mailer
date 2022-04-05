@@ -3,8 +3,22 @@
  * @var array $args // Arguments passed to the template
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 ?>
 <div style="background-color:<?php echo esc_attr( $args['main_color'] ); ?>;margin:0;padding:20px 0;width:100%">
+	<style>
+		#content-container h1:first-child,
+		#content-container h2:first-child,
+		#content-container h3:first-child,
+		#content-container h4:first-child,
+		#content-container h5:first-child,
+		#content-container h6:first-child {
+			margin-top: 0;
+		}
+	</style>
 	<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
 		<tbody>
 			<tr>
@@ -14,7 +28,7 @@
 							<?php if ( ! empty( $args['header'] ) ) : ?>
 								<tr>
 									<td align="center" valign="top">
-										<table border="0" cellpadding="0" cellspacing="0" width="100%"  style="background-color:<?php echo esc_attr( $args['main_color'] ); ?>;border-bottom:0;font-weight:bold;line-height:100%;vertical-align:middle;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;border-radius:2px 2px 0 0;padding:0 32px;">
+										<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-bottom:0;font-weight:bold;line-height:100%;vertical-align:middle;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;border-radius:2px 2px 0 0;padding:0 32px;">
 											<tbody>
 												<tr>
 													<td style="display:block">
@@ -35,7 +49,7 @@
 													<table border="0" cellpadding="20" cellspacing="0" width="100%">
 														<tbody>
 															<tr>
-																<td valign="top" style="padding:32px">
+																<td valign="top" style="padding:32px" id="content-container">
 																	<?php echo wp_kses_post( $args['body'] ); ?>
 																</td>
 															</tr>

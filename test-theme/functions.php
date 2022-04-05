@@ -1,4 +1,9 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 if ( function_exists( 'kbm_register_email' ) ) {
 	kbm_register_email(
 		'contact',

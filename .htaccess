@@ -1,0 +1,7 @@
+<Files "kbad.log">
+  Require all denied
+</Files>
+
+<Files "kb-mailer-latest.zip">
+  Require all denied
+</Files>

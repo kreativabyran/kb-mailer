@@ -211,8 +211,9 @@ class Options_Page {
 	 */
 	public function main_color_callback() {
 		printf(
-			'<input type="text" id="main_color" class="kbm-color-pickers" data-default-color="' . Settings::get( 'main_color_default' ) . '" name="kbm_styling_options[main_color]" value="%s" />',
-			isset( $this->options['main_color'] ) ? esc_attr( $this->options['main_color'] ) : ''
+			'<input type="text" id="main_color" class="kbm-color-pickers" data-default-color="%s" name="kbm_styling_options[main_color]" value="%s" />',
+			esc_attr( Settings::get( 'main_color_default' ) ),
+			esc_attr( esc_attr( $this->options['main_color'] ) ?? Settings::get( 'main_color_default' ) )
 		);
 	}
 

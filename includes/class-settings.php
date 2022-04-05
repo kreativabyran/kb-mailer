@@ -13,7 +13,7 @@ class Settings {
 	 */
 	private static $settings = array(
 		'admin_page_slug'    => 'kb-mailer',
-		'main_color_default' => '#221f47',
+		'main_color_default' => '#eeeeee',
 	);
 
 	/**
