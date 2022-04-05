@@ -114,14 +114,6 @@ class Email_Options_Page {
 			Settings::get( 'admin_page_slug' ) . '-' . $this->id, // Page
 			'kbm_section_content_' . $this->id // Section
 		);
-
-		add_settings_field(
-			'footer',
-			__( 'Footer', 'kb-mailer' ),
-			array( $this, 'footer_callback' ),
-			Settings::get( 'admin_page_slug' ) . '-' . $this->id,
-			'kbm_section_content_' . $this->id
-		);
 	}
 
 	/**
@@ -140,10 +132,6 @@ class Email_Options_Page {
 
 		if ( isset( $input['body'] ) ) {
 			$new_input['body'] = wp_kses_post( $input['body'] );
-		}
-
-		if ( isset( $input['footer'] ) ) {
-			$new_input['footer'] = sanitize_text_field( $input['footer'] );
 		}
 
 		return $new_input;
@@ -202,16 +190,6 @@ class Email_Options_Page {
 				'media_buttons' => false,
 				'textarea_name' => 'kbm_options_' . $this->id . '[body]',
 			)
-		);
-	}
-
-	/**
-	 * Get the settings option array and print one of its values
-	 */
-	public function footer_callback() {
-		printf(
-			'<input type="text" id="email_footer" name="kbm_options_' . $this->id . '[footer]" value="%s" />',
-			isset( $this->options['footer'] ) ? esc_attr( $this->options['footer'] ) : ''
 		);
 	}
 }

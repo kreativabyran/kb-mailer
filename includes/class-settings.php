@@ -12,9 +12,8 @@ class Settings {
 	 * @var array KB_Mailer settings
 	 */
 	private static $settings = array(
-		'admin_page_slug'         => 'kb-mailer',
-		'main_color_default'      => '#221f47',
-		'secondary_color_default' => '#ec6f6f',
+		'admin_page_slug'    => 'kb-mailer',
+		'main_color_default' => '#eeeeee',
 	);
 
 	/**

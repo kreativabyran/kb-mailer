@@ -4,7 +4,7 @@ Plugin Name: KB Mailer
 Plugin URI: https://kreatiabyran.se
 Description: Provides a simple way of building emails.
 Version: 1.5
-Author: @oskarmodig
+Author: Kreativa Byrån
 Author URI: https://kreatiabyran.se
 */
 
