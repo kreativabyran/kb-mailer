@@ -5,3 +5,23 @@
 <Files "kb-mailer-latest.zip">
   Require all denied
 </Files>
+
+<Files "composer.json">
+  Require all denied
+</Files>
+
+<Files "composer.lock">
+  Require all denied
+</Files>
+
+<Files ".lando.yml">
+  Require all denied
+</Files>
+
+<Files ".gitignore">
+  Require all denied
+</Files>
+
+<Files ".gitattributes">
+  Require all denied
+</Files>
