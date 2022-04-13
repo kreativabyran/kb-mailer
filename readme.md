@@ -7,7 +7,7 @@
 composer require kreativabyran/kb-mailer
 ```
 ## Plugin
-Download zip-file and install as plugin.
+Download zip-file from the latest release and install as plugin.
 ## Usage
 
 ### Register email
