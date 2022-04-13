@@ -1,6 +1,7 @@
 {
   "name": "kreativabyran/kb-mailer",
   "version": "1.8.0",
+  "description": "Provides a simple way of building and sending templated emails in WordPress",
   "require": {
     "pablo-sg-pacheco/wp-namespace-autoloader": "dev-master"
   },
