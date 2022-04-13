@@ -29,3 +29,6 @@ vendor/
 # Databases
 *.sql
 *.sql.gz
+
+# Archives
+*.zip

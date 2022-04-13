@@ -18,8 +18,6 @@ services:
     type: mailhog
     hogfrom:
       - appserver
-#  database:
-#    portforward: 37001
 tooling:
   composer:
     service: appserver
@@ -45,8 +43,6 @@ tooling:
       - appserver: composer update
 
 events:
-  pre-db-import:
-    - appserver: scp -i lando_id_rsa oskar@o.kreativabyran.se:/home/oskar/db_store/kb-mailer.sql.gz db.sql.gz
   post-db-import:
     # Search and replace URL
     - appserver: wp search-replace "kb-mailer.d.kreativabyran.se" "kb-mailer.lndo.site" --all-tables --verbose --path=wordpress
@@ -58,8 +54,6 @@ events:
     - appserver: wp option set blog_public 0 --path=wordpress
     # Enable WP Debug
     - appserver: wp config set WP_DEBUG true --raw --path=wordpress
-    # Enable GraphQL Debug
-    - appserver: wp config set GRAPHQL_DEBUG true --raw --path=wordpress
     # Change WP Mail SMTP plugin settings to use MailHog.
     - appserver: wp option patch update wp_mail_smtp mail '{"from_email":"dev@kreativabyran.se","from_name":"LANDO DEV","mailer":"smtp","return_path":false,"from_email_force":true,"from_name_force":true}' --format=json --path=wordpress
     - appserver: wp option patch update wp_mail_smtp smtp '{"autotls":"yes","auth":false,"host":"mailhog.kb-mailer.internal","encryption":"none","port":"1025","user":"dev@kb","pass":"pass"}' --format=json --path=wordpress
@@ -68,10 +62,3 @@ events:
     - appserver: wp option patch update swpsmtp_options smtp_settings port 1025 --path=wordpress
     - appserver: wp option patch update swpsmtp_options smtp_settings autentication no --path=wordpress
     - appserver: wp option patch update swpsmtp_options smtp_settings type_encryption none --path=wordpress
-    # Remove temp DB files.
-    - appserver: rm -f db.sql.gz
-
-  pre-db-export:
-    - appserver: rm -f db.sql.gz
-  post-db-export:
-    - appserver: scp -i lando_id_rsa db.sql.gz oskar@o.kreativabyran.se:/home/oskar/db_store/kb-mailer.sql.gz

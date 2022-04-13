@@ -2,8 +2,8 @@
 /*
 Plugin Name: KB Mailer
 Plugin URI: https://kreatiabyran.se
-Description: Provides a simple way of building emails.
-Version: 1.7
+Description: Provides a simple way of building and sending templated emails in WordPress.
+Version: 1.8.0
 Author: Kreativa Byrån
 Author URI: https://kreatiabyran.se
 */
