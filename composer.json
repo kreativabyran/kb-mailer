@@ -6,10 +6,10 @@
   },
   "scripts": {
     "post-install-cmd": [
-      "vendor\\squizlabs\\php_codesniffer\\bin\\phpcs.bat --config-set default_standard WordPress-KB"
+      "[ $COMPOSER_DEV_MODE -eq 0 ] || vendor\\squizlabs\\php_codesniffer\\bin\\phpcs.bat --config-set default_standard WordPress-KB"
     ],
     "post-update-cmd": [
-      "vendor\\squizlabs\\php_codesniffer\\bin\\phpcs.bat --config-set default_standard WordPress-KB"
+      "[ $COMPOSER_DEV_MODE -eq 0 ] || vendor\\squizlabs\\php_codesniffer\\bin\\phpcs.bat --config-set default_standard WordPress-KB"
     ]
   },
   "autoload": {

@@ -1,11 +1,17 @@
 # KB Mailer
 
 ## Installation
+## Composer
+
+```
+composer require kreativabyran/kb-mailer
+```
+## Plugin
 Download zip-file and install as plugin.
 ## Usage
 
 ### Register email
-First you have to register an email that you later can send. This is done with `kbm_register_email()`
+First you have to register an email that you later can send. This is done with `kbm_register_email()`, which should be hooked on `init`.
 
 | param              | type     | desc                                                                                                                                                                                                        |
 |--------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -15,17 +21,23 @@ First you have to register an email that you later can send. This is done with `
 
  Example:
  ```php
-if ( function_exists( 'kbm_register_email' ) ) {
-    kbm_register_email(
-        'contact',
-        'Contact request',
-        array(
-            'name'    => 'Name of person requesting contact',
-            'message' => 'Message from person', 
-        )
-    );
-}
+add_action(
+    'init',
+    function() {
+        if ( function_exists( 'kbm_register_email' ) ) {
+            kbm_register_email(
+                'contact',
+                'Contact request',
+                array(
+                    'name'    => 'Name of person requesting contact',
+                    'message' => 'Message from person', 
+                )
+            );
+        }
+    }
+);
  ```
+_Note that the `function_exists()` check is only needed when using as plugin, not when installing from composer._
 
 ### Editing email
 Go to wp-admin > KB Mailer to see a list with all registered emails, there you can edit each part of the email, and use the registered content variables in the template.
@@ -58,6 +70,7 @@ if ( function_exists( 'kbm_send_email' ) ) {
     wp_mail( $to, 'Contact request', "<h1>Contact request from $name</h1><p>$message</p>", array( 'Content-Type: text/html; charset=UTF-8' ) );
 }
 ```
+_The failsafe isn't necessary when kb-mailer has been installed from composer._
 
 ## Configuration
 ### Permissions

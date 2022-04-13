@@ -38,8 +38,8 @@ tooling:
     description: Create installable plugin zip
     cmd:
       - appserver: composer update --no-dev --optimize-autoloader
-      - appserver: rm -f kb-mailer-latest.zip
-      - appserver: composer archive --format=zip --file kb-mailer-latest
+      - appserver: rm -f kb-mailer.zip
+      - appserver: composer archive --format=zip --file kb-mailer
       - appserver: composer update
 
 events:
