@@ -1,14 +1,15 @@
 {
   "name": "kreativabyran/kb-mailer",
-  "version": "1.8.0",
   "description": "Provides a simple way of building and sending templated emails in WordPress",
   "require-dev": {
-    "kreativabyran/kb-wpcs": "^1.0.0"
+    "kreativabyran/kb-wpcs": "^1.0.2"
   },
   "scripts": {
     "post-install-cmd": [
-      "vendor\\squizlabs\\php_codesniffer\\bin\\phpcs.bat --config-set installed_paths ..\\..\\wp-coding-standards\\wpcs\\",
-      "vendor\\squizlabs\\php_codesniffer\\bin\\phpcs.bat --config-set default_standard WordPress-Extra"
+      "vendor\\squizlabs\\php_codesniffer\\bin\\phpcs.bat --config-set default_standard WordPress-KB"
+    ],
+    "post-update-cmd": [
+      "vendor\\squizlabs\\php_codesniffer\\bin\\phpcs.bat --config-set default_standard WordPress-KB"
     ]
   },
   "autoload": {
