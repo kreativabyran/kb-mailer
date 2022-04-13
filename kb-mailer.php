@@ -3,7 +3,7 @@
 Plugin Name: KB Mailer
 Plugin URI: https://kreatiabyran.se
 Description: Provides a simple way of building and sending templated emails in WordPress.
-Version: 1.8.0
+Version: 2.0.0
 Author: Kreativa Byrån
 Author URI: https://kreatiabyran.se
 */
@@ -16,16 +16,6 @@ define( 'KBM_DIR', plugin_dir_path( __FILE__ ) );
 define( 'KBM_URI', plugin_dir_url( __FILE__ ) );
 
 require_once KBM_DIR . 'vendor/autoload.php';
-
-$autoloader = new \Pablo_Pacheco\WP_Namespace_Autoloader\WP_Namespace_Autoloader(
-	array(
-		'directory'        => __DIR__,
-		'namespace_prefix' => 'KB_Mailer',
-		'classes_dir'      => 'includes',
-		'lowercase'        => array( 'file', 'folders' ),
-	)
-);
-$autoloader->init();
 
 new \KB_Mailer\Options_Page();
 
