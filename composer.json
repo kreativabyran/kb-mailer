@@ -2,7 +2,7 @@
   "name": "kreativabyran/kb-mailer",
   "description": "Provides a simple way of building and sending templated emails in WordPress",
   "require-dev": {
-    "kreativabyran/kb-wpcs": "^1.0.1"
+    "kreativabyran/kb-wpcs": "^1.0.2"
   },
   "scripts": {
     "post-install-cmd": [
@@ -13,6 +13,9 @@
     ]
   },
   "autoload": {
+    "files": [
+      "setup.php"
+    ],
     "psr-4": {
       "KB_Mailer\\": "includes/"
     }
