@@ -37,10 +37,10 @@ tooling:
   deploy:
     description: Create installable plugin zip
     cmd:
-      - appserver: composer update --no-dev --optimize-autoloader
+      - appserver: composer update --no-dev --optimize-autoloader --no-scripts
       - appserver: rm -f kb-mailer.zip
       - appserver: composer archive --format=zip --file kb-mailer
-      - appserver: composer update
+      - appserver: composer update --no-scripts
 
 events:
   post-db-import:
