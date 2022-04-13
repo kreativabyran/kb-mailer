@@ -1,4 +1,6 @@
 {
+  "name": "kreativabyran/kb-mailer",
+  "version": "1.8.0",
   "require": {
     "pablo-sg-pacheco/wp-namespace-autoloader": "dev-master"
   },
