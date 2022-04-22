@@ -4,8 +4,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'KBM_DIR', plugin_dir_path( __FILE__ ) );
-define( 'KBM_URI', plugin_dir_url( __FILE__ ) );
+$file_path = dirname( __FILE__ );
+$url_path  = str_replace( $_SERVER['DOCUMENT_ROOT'], '', $file_path );
+$full_url  = site_url( $url_path ) . '/';
+
+define( 'KBM_DIR', $file_path . '/' );
+define( 'KBM_URI', $full_url );
 
 new \KB_Mailer\Options_Page();
 
