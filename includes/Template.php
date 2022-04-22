@@ -19,7 +19,11 @@ class Template {
 	private $args;
 
 	public function __construct( $template, $args = array() ) {
-		$this->path = KBM_DIR . 'templates/' . $template . '.php';
+		if ( file_exists( get_stylesheet_directory() . '/kb-mailer/templates/' . $template . '.php' ) ) {
+			$this->path = get_stylesheet_directory() . '/kb-mailer/templates/' . $template . '.php';
+		} else {
+			$this->path = KBM_DIR . 'templates/' . $template . '.php';
+		}
 		$this->args = $args;
 	}
 
