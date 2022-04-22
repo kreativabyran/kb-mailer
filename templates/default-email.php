@@ -9,16 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 <div style="background-color:<?php echo esc_attr( $args['main_color'] ); ?>;margin:0;padding:20px 0;width:100%">
-	<style>
-		#content-container h1:first-child,
-		#content-container h2:first-child,
-		#content-container h3:first-child,
-		#content-container h4:first-child,
-		#content-container h5:first-child,
-		#content-container h6:first-child {
-			margin-top: 0;
-		}
-	</style>
 	<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
 		<tbody>
 			<tr>
