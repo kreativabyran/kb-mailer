@@ -25,6 +25,7 @@
       ".gitignore",
       ".gitattributes",
       ".lando.yml",
+      ".idea",
       "composer.json",
       "composer.lock",
       "!vendor/",
