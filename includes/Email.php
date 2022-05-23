@@ -72,7 +72,11 @@ class Email {
 	 * @return string
 	 */
 	public function get_default_subject() {
-		return $this->subject ?? $this->name;
+		if ( isset( $this->subject ) && ! empty( $this->subject ) ) {
+			return $this->subject;
+		}
+
+		return $this->name;
 	}
 
 	/**
