@@ -8,6 +8,10 @@ $file_path = dirname( __FILE__ );
 $url_path  = str_replace( $_SERVER['DOCUMENT_ROOT'], '', $file_path );
 $full_url  = site_url( $url_path ) . '/';
 
+if( 'local' === wp_get_environment_type() && defined( 'WP_IS_LANDO' ) && ! empty( WP_IS_LANDO )  ) {
+	$full_url = plugin_dir_url( __FILE__ );
+}
+
 define( 'KBM_DIR', $file_path . '/' );
 define( 'KBM_URI', $full_url );
 
