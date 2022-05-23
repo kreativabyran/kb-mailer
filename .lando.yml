@@ -7,7 +7,7 @@ proxy:
     - mail.kb-mailer.lndo.site
 config:
   webroot: wordpress
-  php: '8.1'
+  php: '7.4'
   xdebug: true
 services:
   pma:
